@@ -1,0 +1,82 @@
+From http handler to kubernetes
+
+2 Apr 2016
+#Tags: kubernetes, http, google, cloud, platform, heroku
+
+Adrien Delorme
+Rive Paris
+http://www.rive.world/
+http://github.com/azr
+@gratator
+
+
+
+* Go in prod ?
+
+* Go in prod !
+
+.link https://eng.uber.com/go-geofence/ Über - How we built uber engineering’s highest query per second service using go
+.link https://talks.golang.org/2013/oscon-dl.slide Google - dl.google.com: Powered by Go
+
+
+And others !
+.link https://github.com/golang/go/wiki/GoUsers https://github.com/golang/go/wiki/GoUsers
+
+* HTTP handling in go
+
+
+* HTTP handling in go - Basics
+
+.play handlers_to_k8s/empty/handler.go
+
+* HTTP handling in go - Real life
+
+* HTTP handling in go - Real life
+
+.play handlers_to_k8s/service/handler.go  /START OMIT/,/END OMIT/
+
+* HTTP handling in go - Code generation
+
+
+
+* HTTP handling in go - Gode Generation
+
+The job:
+.code handlers_to_k8s/generation/handler.go  /BEFORE_USER_CREATE OMIT/,/USER_CREATE_FIRST_LINE OMIT/
+
+
+
+
+* HTTP handling in go - Gode Generation
+
+The job:
+.code handlers_to_k8s/generation/handler.go  /BEFORE_USER_CREATE OMIT/,/USER_CREATE_FIRST_LINE OMIT/
+Get the request:
+.code handlers_to_k8s/generation/handler.go  /START_REQ OMIT/,/BEFORE_USER_CREATE_GENERATE OMIT/
+
+
+
+
+* HTTP handling in go - Gode Generation
+The request:
+.code handlers_to_k8s/generation/handler.go  /START_REQ OMIT/,/END_REQ OMIT/
+The job:
+.code handlers_to_k8s/generation/handler.go  /BEFORE_USER_CREATE_GENERATE OMIT/,/AFTER_USER_CREATE OMIT/
+
+Run "go generate"
+
+* HTTP handling in go - Gode Generation
+The jobs:
+.code handlers_to_k8s/generation/handler.go  /BEFORE_USER_CREATE_GENERATE OMIT/,/USER_CREATE_FIRST_LINE OMIT/
+.code handlers_to_k8s/generation/handler.go  /AFTER_USER_CREATE OMIT/,/USER_GET_FIRST_LIST OMIT/
+.code handlers_to_k8s/generation/handler.go  /BEFORE_INIT OMIT/,/AFTER_INIT OMIT/
+
+* Gode Generated - show time
+
+* Where to run those handlers ?
+
+* Other cases
+
+* Other cases - Rive's Hotbase
+
+.image handlers_to_k8s/screen_hotbase.png _ 800
