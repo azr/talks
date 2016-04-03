@@ -78,3 +78,134 @@ Run "go generate"
 
 * Other cases - Rive
 .image handlers_to_k8s/screen_hotbase.png _ 800
+
+* We chose Kubernetes
+
+* 
+.image handlers_to_k8s/kubernetes-580px.jpeg
+
+
+* How we use it ?
+
+* Git flow
+
+- Code your exotic program or feature
+- Submit code review
+
+--> For every git push tests are run
+
+* Code was merged
+
+- re run tests
+- build executable
+
+* Deploy
+
+* Deploy - init
+
+- dockerise executable
+- push image to private repository
+
+* Deploy - create the replication controller
+
+    #!/bin/bash
+    cat <<EOF
+    apiVersion: v1
+    kind: ReplicationController
+    metadata:
+      name: rtpush-${GIT_SHA}
+    spec:
+      replicas: ${NB_REPLICAS}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    EOF
+
+* Deploy - define the template of a pod
+
+    #!/bin/bash
+    cat <<EOF
+    apiVersion: v1
+    kind: ReplicationController
+    metadata:
+      name: rtpush-${GIT_SHA}
+    spec:
+      replicas: ${NB_REPLICAS}
+      selector:
+        app: rtpush
+        deployment: ${GIT_SHA}
+      template:
+        metadata:
+          name: rtpush-${GIT_SHA}
+          labels:
+            app: rtpush
+            deployment: ${GIT_SHA}
+        spec:
+          containers: #pods of the rc
+          - name: rtpush
+            image: gcr.io/rive/rtpush:${GIT_SHA}
+            ports:
+            - containerPort: 8080
+    EOF
+
+* Deploy - define limits of a pod
+
+- number of cpu needed
+- max mem use per pod
+
+* Deploy - rolling update
+
+  $ kubectl rolling-update ${PREVIOUS_RC_NAME} -f rc-rtpush.json
+
+* Deploy - rolling update output
+
+  $ kubectl rolling-update rtpush-b185186 -f rc-rtpush.json
+  Created rtpush-new
+  Scaling up rtpush-new from 0 to 1, scaling down rtpush-b185186  from 1 to 0 (keep 1 pods 
+  available, don't exceed 2 pods)
+
+  Scaling rtpush-new up to 1
+
+  Scaling rtpush-b185186 down to 0
+
+  Update succeeded. Deleting rtpush-b185186 replicationcontroller "rtpush-b185186"
+  rolling updated to "rtpush-new"
+
+It's live !
+
+* Deploy - create the service
+
+  ---
+    kind: "Service"
+    apiVersion: "v1"
+    metadata:
+      name: "rtpush"
+      labels:
+        app: "rtpush"
+    spec:
+      type: "LoadBalancer"
+      ports:
+        -
+          name: "http"
+          port: 80
+          targetPort: 8080
+        -
+          name: "https"
+          port: 443
+          targetPort: 4443
+      selector:
+        app: "rtpush"
+      loadBalancerIP: "SOME_IP"
+It's reachable !
