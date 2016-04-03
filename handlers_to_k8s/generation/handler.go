@@ -30,11 +30,7 @@ func HTTPUserCreateRequest(r *http.Request) (uc UserCreateRequest, err error) {
 //BEFORE_USER_CREATE OMIT
 func UserCreate(u UserCreateRequest) (status int, err error) {
 	//USER_CREATE_FIRST_LINE OMIT
-	created := DB.CreateUser(u)
-	if !created {
-		return 0, errors.New("username taken")
-	}
-	return http.StatusCreated, nil
+	return http.StatusCreated, DB.CreateUser(u)
 }
 
 //AFTER_USER_CREATE OMIT
@@ -61,7 +57,7 @@ func HTTPUserName(r *http.Request) (UserName, error) {
 //BEFORE_INIT OMIT
 func init() {
 	http.HandleFunc("/user/create", UserCreateHandler)
-	http.HandleFunc("/user/get", UserCreateHandler)
+	http.HandleFunc("/user/get", UserGetHandler)
 }
 
 //AFTER_INIT OMIT
@@ -75,16 +71,21 @@ type User struct {
 	Name string
 }
 
-func (f FakeDB) CreateUser(u UserCreateRequest) (created bool) {
+func (u User) ServeHTTP(w http.ResponseWriter, r *http.Request) { // user knows how to http write itself
+	// if response encoding has to be json :
+	json.NewEncoder(w).Encode(u)
+}
+
+func (f FakeDB) CreateUser(u UserCreateRequest) (err error) {
 	_, found := f[u.Name]
 	if found {
-		return false
+		return errors.New("UserName taken !")
 	}
 	f[u.Name] = User{
 		ID:   uint64(len(f) + 1),
 		Name: u.Name,
 	}
-	return true
+	return nil
 }
 
 func (f FakeDB) GetUser(id UserName) (user User, found bool) {
@@ -93,5 +94,5 @@ func (f FakeDB) GetUser(id UserName) (user User, found bool) {
 }
 
 func main() {
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8082", nil)
 }

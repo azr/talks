@@ -10,19 +10,19 @@ import (
 func init() { http.HandleFunc("/user", UserGetHandler) }
 
 func UserGetHandler(w http.ResponseWriter, r *http.Request) {
-	idString := r.URL.Query().Get("name")
-	id, err := strconv.ParseUint(idString, 10, 64)
+	id, err := strconv.ParseUint(r.URL.Query().Get("id"), 10, 64)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
-	user, found := DB.UserGet(id)
-	if !found {
-		w.WriteHeader(http.StatusNotFound)
+	user, found, err := DB.UserGet(id)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
+	if !found {
+		w.WriteHeader(http.StatusNotFound)
+	}
 	json.NewEncoder(w).Encode(&user)
 }
 
@@ -33,19 +33,23 @@ var DB = FakeDB{}
 type FakeDB map[uint64]User
 
 type User struct {
-	ID   uint64
-	Name string
+	ID   uint64 `json:"id,omitempty"`
+	Name string `json:"name,omitempty"`
 }
 
-func (f FakeDB) UserGet(id uint64) (User, bool) {
+func (f FakeDB) UserGet(id uint64) (User, bool, error) {
 	user, found := f[id]
-	return user, found
+	return user, found, nil
 }
 
-// func main() {
-// 	DB[0] = User{
-// 		ID:   0,
-// 		Name: "first !",
-// 	}
-// 	http.ListenAndServe(":8080", nil)
-// }
+func main() {
+	DB[1] = User{
+		ID:   1,
+		Name: "first !",
+	}
+	DB[2] = User{
+		ID:   2,
+		Name: "second !",
+	}
+	http.ListenAndServe(":8081", nil)
+}

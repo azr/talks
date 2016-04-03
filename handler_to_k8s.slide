@@ -7,6 +7,8 @@ Adrien Delorme
 Rive Paris
 http://www.rive.world/
 http://github.com/azr
+http://github.com/azr/generators
+http://github.com/azr/talks
 @gratator
 
 
@@ -35,48 +37,44 @@ And others !
 
 .play handlers_to_k8s/service/handler.go  /START OMIT/,/END OMIT/
 
+* Can't this be simple ?
+
 * HTTP handling in go - Code generation
 
+Create User
 
 
-* HTTP handling in go - Gode Generation
+* But what does core job really look like ?
 
-The job:
-.code handlers_to_k8s/generation/handler.go  /BEFORE_USER_CREATE OMIT/,/USER_CREATE_FIRST_LINE OMIT/
+.code handlers_to_k8s/generation/handler.go  /BEFORE_USER_CREATE OMIT/,/AFTER_USER_CREATE OMIT/
 
+* ... And how do I get the request ?
 
-
-
-* HTTP handling in go - Gode Generation
-
-The job:
-.code handlers_to_k8s/generation/handler.go  /BEFORE_USER_CREATE OMIT/,/USER_CREATE_FIRST_LINE OMIT/
-Get the request:
 .code handlers_to_k8s/generation/handler.go  /START_REQ OMIT/,/BEFORE_USER_CREATE_GENERATE OMIT/
 
 
-
-
 * HTTP handling in go - Gode Generation
-The request:
-.code handlers_to_k8s/generation/handler.go  /START_REQ OMIT/,/END_REQ OMIT/
-The job:
-.code handlers_to_k8s/generation/handler.go  /BEFORE_USER_CREATE_GENERATE OMIT/,/AFTER_USER_CREATE OMIT/
+.code handlers_to_k8s/generation/handler.go  /BEFORE_USER_CREATE_GENERATE OMIT/,/USER_CREATE_FIRST_LINE OMIT/
 
-Run "go generate"
 
 * HTTP handling in go - Gode Generation
 The jobs:
 .code handlers_to_k8s/generation/handler.go  /BEFORE_USER_CREATE_GENERATE OMIT/,/USER_CREATE_FIRST_LINE OMIT/
 .code handlers_to_k8s/generation/handler.go  /AFTER_USER_CREATE OMIT/,/USER_GET_FIRST_LIST OMIT/
+Run "go generate"
 .code handlers_to_k8s/generation/handler.go  /BEFORE_INIT OMIT/,/AFTER_INIT OMIT/
 
-* Gode Generated - show time
+* Code Generated - show time
+
+* Any question here ?
 
 * Where to run those handlers ?
 
+* When it's a line that calls a backend service
+- Appengine
+- Heroku
+- Others
 * Other cases
 
-* Other cases - Rive's Hotbase
-
+* Other cases - Rive
 .image handlers_to_k8s/screen_hotbase.png _ 800
