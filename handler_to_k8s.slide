@@ -76,7 +76,7 @@ Run "go generate"
 - Appengine
 - Heroku
 - Others
-* Other cases
+* But sometimes it's not that simple
 
 * Other cases - Rive
 .image handlers_to_k8s/screen_hotbase.png _ 800
@@ -96,7 +96,7 @@ Run "go generate"
 
 --> For every git push tests are run
 
-* Code was merged
+* When code is merged
 
 - re run tests
 - build executable
