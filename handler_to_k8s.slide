@@ -81,7 +81,7 @@ Run "go generate"
 * Other cases - Rive
 .image handlers_to_k8s/screen_hotbase.png _ 800
 
-* We chose Kubernetes
+* We chose Kubernetes for this
 
 * 
 .image handlers_to_k8s/kubernetes-580px.jpeg
@@ -198,6 +198,7 @@ It's live !
         app: "rtpush"
     spec:
       type: "LoadBalancer"
+      loadBalancerIP: "SOME_IP"
       ports:
         -
           name: "http"
@@ -209,5 +210,6 @@ It's live !
           targetPort: 4443
       selector:
         app: "rtpush"
-      loadBalancerIP: "SOME_IP"
 It's reachable !
+
+* Et voilà
